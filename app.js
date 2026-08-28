@@ -153,9 +153,11 @@ function setupEventListeners() {
     effectSelect.addEventListener('change', (e) => {
         currentMode = parseInt(e.target.value);
         if (currentMode === 1) {
-            demoControls.classList.remove('hidden');
+            demoControls.disabled = false;
+            demoControls.style.opacity = '1';
         } else {
-            demoControls.classList.add('hidden');
+            demoControls.disabled = true;
+            demoControls.style.opacity = '0.5';
         }
         sendDataToArduino();
     });

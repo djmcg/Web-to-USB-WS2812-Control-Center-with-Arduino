@@ -18,9 +18,9 @@
             <button id="master-power-btn" class="power-btn off">OFF</button>
         </header>
 
-        <!-- Główny układ: kontrolki + podgląd -->
+        <!-- Główny układ: lewa (kontrolki) + prawa (podgląd + instrukcja) -->
         <div class="main-layout">
-            <!-- Lewa kolumna: kontrolki -->
+            <!-- Lewa kolumna: wybór koloru + presety + efekty + jasność -->
             <div class="controls-column">
                 <!-- Panel Konfiguracji Połączenia USB -->
                 <section class="config-toolbar">
@@ -106,52 +106,45 @@
                         <input type="range" id="speed-slider" min="10" max="500" value="50">
                     </div>
 
-                    <div id="demo-controls" class="demo-box hidden">
+                    <div id="demo-controls" class="demo-box" disabled>
                         <div class="slider-header">
                             <span>DEMO czas:</span>
                             <span id="demo-time-val">10s</span>
                         </div>
-                        <input type="range" id="demo-time-slider" min="3" max="60" value="10">
+                        <input type="range" id="demo-time-slider" min="3" max="60" value="10" disabled>
                     </div>
                 </section>
             </div>
 
-            <!-- Prawa kolumna: podgląd diod -->
+            <!-- Prawa kolumna: podgląd diod + instrukcja Arduino -->
             <div class="preview-column">
+                <!-- Podgląd diod -->
                 <section class="section-box preview-section">
                     <h2 class="section-title">PODGLĄD DIOD</h2>
                     <div id="led-preview-container" class="led-preview-grid">
                         <!-- Diodki generowane przez JS -->
                     </div>
                 </section>
-            </div>
-        </div>
 
-        <!-- Stopka -->
-        <footer class="card-footer">
-            <span id="connection-status">Rozłączono • Wybierz "Połącz z Arduino (USB)"</span>
-        </footer>
-    </div>
+                <!-- Instrukcja Arduino -->
+                <section class="section-box arduino-section">
+                    <h2 class="section-title">📋 INSTRUKCJA: WGRYWANIE FIRMWARE</h2>
+                    <div class="arduino-steps">
+                        <ol>
+                            <li>Podłącz Arduino do komputera przez USB</li>
+                            <li>Zainstaluj <strong>Arduino IDE</strong> z <a href="https://www.arduino.cc/en/software" target="_blank">arduino.cc</a></li>
+                            <li>W Arduino IDE: <strong>Plik → Preferencje → Dodatkowe adresy URL menedżera płyt</strong>:
+                                <br><code>https://raw.githubusercontent.com/FastLED/FastLED/release/package_fastled_index.json</code>
+                            </li>
+                            <li><strong>Narzędzia → Płytka → Menadżer płyt</strong> → wyszukaj "FastLED" i zainstaluj</li>
+                            <li><strong>Narzędzia → Płytka</strong> → wybierz <strong>Arduino Uno</strong></li>
+                            <li><strong>Narzędzia → Port</strong> → wybierz odpowiedni port COM</li>
+                            <li>Skopiuj kod poniżej, wklej do Arduino IDE i kliknij <strong>Prześlij</strong></li>
+                        </ol>
 
-    <!-- Instrukcja Arduino + kod firmware -->
-    <div class="arduino-help">
-        <h2 class="section-title">📋 INSTRUKCJA: WGRYWANIE FIRMWARE DO ARDUINO</h2>
-        <div class="help-content">
-            <ol>
-                <li>Podłącz Arduino do komputera przez USB</li>
-                <li>Zainstaluj <strong>Arduino IDE</strong> z <a href="https://www.arduino.cc/en/software" target="_blank">arduino.cc</a></li>
-                <li>W Arduino IDE: <strong>Plik → Preferencje → Dodatkowe adresy URL menedżera płyt</strong>:
-                    <br><code>https://raw.githubusercontent.com/FastLED/FastLED/release/package_fastled_index.json</code>
-                </li>
-                <li><strong>Narzędzia → Płytka → Menadżer płyt</strong> → wyszukaj "FastLED" i zainstaluj</li>
-                <li><strong>Narzędzia → Płytka</strong> → wybierz <strong>Arduino Uno</strong></li>
-                <li><strong>Narzędzia → Port</strong> → wybierz odpowiedni port COM</li>
-                <li>Skopiuj kod poniżej, wklej do Arduino IDE i kliknij <strong>Prześlij</strong></li>
-            </ol>
-
-            <details class="firmware-code">
-                <summary>📄 Kod firmware (sketch.ino) — kliknij aby rozwinąć</summary>
-                <pre><code>#include <FastLED.h>
+                        <details class="firmware-code">
+                            <summary>📄 Kod firmware (sketch.ino)</summary>
+                            <pre><code>#include <FastLED.h>
 
 #define MAX_LEDS 256
 #define DEFAULT_PIN 3
@@ -304,8 +297,16 @@ void runFireEffect() {
     leds[j] = color;
   }
 }</code></pre>
-            </details>
+                        </details>
+                    </div>
+                </section>
+            </div>
         </div>
+
+        <!-- Stopka -->
+        <footer class="card-footer">
+            <span id="connection-status">Rozłączono • Wybierz "Połącz z Arduino (USB)"</span>
+        </footer>
     </div>
 
     <script src="app.js"></script>

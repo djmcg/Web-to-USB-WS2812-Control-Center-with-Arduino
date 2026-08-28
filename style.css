@@ -33,7 +33,7 @@ body {
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
     width: 100%;
-    max-width: 900px;
+    max-width: 1000px;
     padding: 24px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     display: flex;
@@ -102,12 +102,15 @@ body {
     display: flex;
     flex-direction: column;
     gap: 16px;
+    min-width: 0;
 }
 
 .preview-column {
     flex: 1;
     display: flex;
     flex-direction: column;
+    gap: 16px;
+    min-width: 0;
 }
 
 /* Config Toolbar */
@@ -263,6 +266,12 @@ input[type=range] {
     border: 1px dashed var(--accent-blue);
     border-radius: 6px;
     padding: 10px;
+    transition: opacity 0.2s;
+}
+
+.demo-box[disabled] {
+    opacity: 0.5;
+    pointer-events: none;
 }
 
 .hidden {
@@ -279,8 +288,8 @@ input[type=range] {
 }
 
 .brightness-vertical input[type=range][orient=vertical] {
-    writing-mode: bt-lr; /* IE/Edge */
-    -webkit-appearance: slider-vertical; /* WebKit */
+    writing-mode: bt-lr;
+    -webkit-appearance: slider-vertical;
     width: 8px;
     height: 120px;
     accent-color: var(--accent-blue);
@@ -334,56 +343,47 @@ input[type=range] {
     color: var(--text-secondary);
 }
 
-/* Arduino Help */
-.arduino-help {
-    background-color: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    width: 100%;
-    max-width: 900px;
-    padding: 24px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    margin-top: 20px;
+/* Arduino Help w ramce po prawej */
+.arduino-section {
+    border: 2px solid var(--accent-blue);
+    background-color: var(--bg-section);
 }
 
-.arduino-help .section-title {
-    margin-bottom: 16px;
-}
-
-.help-content {
+.arduino-steps {
     color: var(--text-primary);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     line-height: 1.6;
 }
 
-.help-content ol {
+.arduino-steps ol {
     margin-left: 20px;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 }
 
-.help-content li {
+.arduino-steps li {
     margin-bottom: 8px;
 }
 
-.help-content a {
+.arduino-steps a {
     color: var(--accent-blue);
     text-decoration: none;
 }
 
-.help-content a:hover {
+.arduino-steps a:hover {
     text-decoration: underline;
 }
 
-.help-content code {
+.arduino-steps code {
     background-color: var(--bg-input);
     padding: 2px 6px;
     border-radius: 4px;
     font-family: monospace;
     color: var(--accent-blue);
+    font-size: 0.8rem;
 }
 
 .firmware-code {
-    margin-top: 16px;
+    margin-top: 12px;
 }
 
 .firmware-code summary {
@@ -391,22 +391,25 @@ input[type=range] {
     color: var(--accent-blue);
     font-weight: 600;
     padding: 8px;
-    background-color: var(--bg-section);
+    background-color: var(--bg-input);
     border-radius: 6px;
+    font-size: 0.85rem;
 }
 
 .firmware-code pre {
     background-color: var(--bg-input);
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    padding: 16px;
+    padding: 12px;
     overflow-x: auto;
     margin-top: 8px;
+    max-height: 300px;
+    overflow-y: auto;
 }
 
 .firmware-code code {
     font-family: 'Courier New', monospace;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: var(--text-primary);
     line-height: 1.5;
 }
@@ -422,10 +425,6 @@ input[type=range] {
     }
 
     .main-card {
-        max-width: 100%;
-    }
-
-    .arduino-help {
         max-width: 100%;
     }
 }
