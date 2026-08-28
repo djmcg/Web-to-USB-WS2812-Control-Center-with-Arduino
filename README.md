@@ -2,6 +2,8 @@
 
 [English](#english) | [Polski](#polski)
 
+![Panel preview](Snap83656.png)
+
 ---
 
 ## English
