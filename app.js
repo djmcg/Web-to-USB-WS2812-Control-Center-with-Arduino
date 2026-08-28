@@ -576,8 +576,7 @@ async function sendDataToArduino() {
         speedH,         // Speed High Byte
         speedL,         // Speed Low Byte
         demoDuration,   // Demo Switch Interval
-        numLeds,        // Number of LEDs
-        selectedPin     // GPIO Pin
+        numLeds         // Number of LEDs
     ]);
 
     try {
