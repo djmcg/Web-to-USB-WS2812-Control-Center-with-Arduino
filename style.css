@@ -398,6 +398,27 @@ input[type=range] {
     margin-top: 12px;
 }
 
+.copy-btn {
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #2563eb;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.copy-btn:hover {
+    background-color: #1d4ed8;
+}
+
+.copy-btn:active {
+    background-color: #1e40af;
+}
+
 .firmware-code summary {
     cursor: pointer;
     color: var(--accent-blue);

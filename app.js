@@ -52,6 +52,7 @@ window.addEventListener('DOMContentLoaded', () => {
     drawColorWheel();
     renderLEDPreview();
     setupEventListeners();
+    setupCopyButton();
     startPreviewAnimation();
 });
 
@@ -171,6 +172,46 @@ function setupEventListeners() {
         demoDuration = parseInt(e.target.value);
         demoTimeVal.textContent = `${demoDuration}s`;
         sendDataToArduino();
+    });
+}
+
+// Kopiowanie kodu firmware do schowka
+function setupCopyButton() {
+    const copyBtn = document.getElementById('copy-firmware-btn');
+    if (!copyBtn) return;
+
+    copyBtn.addEventListener('click', async () => {
+        const codeBlock = document.querySelector('.firmware-code code');
+        if (!codeBlock) return;
+
+        const text = codeBlock.textContent || codeBlock.innerText;
+        if (!text) return;
+
+        try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                await navigator.clipboard.writeText(text);
+                copyBtn.textContent = 'Skopiowano!';
+            } else {
+                // Fallback dla starszych przeglądarek
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                copyBtn.textContent = 'Skopiowano!';
+            }
+        } catch (err) {
+            console.error('Błąd kopiowania:', err);
+            alert('Nie udało się skopiować kodu. Spróbuj zaznaczyć i skopiować ręcznie.');
+            return;
+        }
+
+        setTimeout(() => {
+            copyBtn.textContent = '📋 Kopiuj kod';
+        }, 2000);
     });
 }
 
