@@ -153,10 +153,12 @@ function setupEventListeners() {
     effectSelect.addEventListener('change', (e) => {
         currentMode = parseInt(e.target.value);
         if (currentMode === 1) {
-            demoControls.disabled = false;
+            demoControls.classList.remove('hidden');
+            demoTimeSlider.disabled = false;
             demoControls.style.opacity = '1';
         } else {
-            demoControls.disabled = true;
+            demoControls.classList.add('hidden');
+            demoTimeSlider.disabled = true;
             demoControls.style.opacity = '0.5';
         }
         sendDataToArduino();

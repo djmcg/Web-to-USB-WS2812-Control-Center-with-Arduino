@@ -278,28 +278,9 @@ input[type=range] {
     display: none !important;
 }
 
-/* Jasność pionowa */
-.brightness-vertical {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    height: 150px;
-}
-
-.brightness-vertical input[type=range][orient=vertical] {
-    writing-mode: bt-lr;
-    -webkit-appearance: slider-vertical;
-    width: 8px;
-    height: 120px;
-    accent-color: var(--accent-blue);
-    cursor: pointer;
-}
-
-.brightness-vertical span {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--accent-blue);
+/* Jasność pozioma */
+.brightness-section .slider-header {
+    margin-bottom: 8px;
 }
 
 /* Podgląd LED */

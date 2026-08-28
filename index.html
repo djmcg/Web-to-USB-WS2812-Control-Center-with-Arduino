@@ -69,13 +69,13 @@
                     </div>
                 </section>
 
-                <!-- Sekcja 2: Jasność (pionowy suwak) -->
-                <section class="section-box brightness-section">
-                    <h2 class="section-title">JASNOŚĆ</h2>
-                    <div class="brightness-vertical">
-                        <input type="range" id="brightness-slider" min="0" max="100" value="80" orient="vertical">
+                <!-- Sekcja 2: Jasność -->
+                <section class="section-box">
+                    <div class="slider-header">
+                        <span>JASNOŚĆ:</span>
                         <span id="brightness-val">80%</span>
                     </div>
+                    <input type="range" id="brightness-slider" min="0" max="100" value="80">
                 </section>
 
                 <!-- Sekcja 3: Efekty i Szybkość -->
@@ -106,12 +106,12 @@
                         <input type="range" id="speed-slider" min="10" max="500" value="50">
                     </div>
 
-                    <div id="demo-controls" class="demo-box" disabled>
+                    <div id="demo-controls" class="demo-box">
                         <div class="slider-header">
                             <span>DEMO czas:</span>
                             <span id="demo-time-val">10s</span>
                         </div>
-                        <input type="range" id="demo-time-slider" min="3" max="60" value="10" disabled>
+                        <input type="range" id="demo-time-slider" min="3" max="60" value="10">
                     </div>
                 </section>
             </div>
