@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Taśmy LED (WS2812) - Web Serial Control</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="main-card">
+        <!-- Pasek Nagłówkowy -->
+        <header class="card-header">
+            <div class="title-group">
+                <span class="status-dot green"></span>
+                <h1 id="header-title">Panel Taśmy LED (8x WS2812)</h1>
+            </div>
+            <button id="master-power-btn" class="power-btn off">OFF</button>
+        </header>
+
+        <!-- Panel Konfiguracji Połączenia USB -->
+        <section class="config-toolbar">
+            <button id="connect-btn" class="connect-btn">🔌 Połącz z Arduino (USB)</button>
+            <div class="config-inputs">
+                <label>Pin: 
+                    <select id="pin-select">
+                        <option value="2">D2</option>
+                        <option value="3" selected>D3</option>
+                        <option value="4">D4</option>
+                        <option value="5">D5</option>
+                        <option value="6">D6</option>
+                        <option value="7">D7</option>
+                        <option value="8">D8</option>
+                    </select>
+                </label>
+                <label>Liczba LED: 
+                    <input type="number" id="led-count" value="8" min="1" max="256">
+                </label>
+            </div>
+        </section>
+
+        <!-- Sekcja 1: Wybór Koloru Statycznego -->
+        <section class="section-box">
+            <h2 class="section-title">WYBÓR KOLORU STATYCZNEGO</h2>
+            <div class="color-picker-wrapper">
+                <canvas id="color-wheel" width="180" height="180"></canvas>
+                <div class="color-info">
+                    <input type="text" id="hex-input" value="#000000" maxlength="7">
+                    <span id="rgb-display" class="rgb-text">RGB(0, 0, 0)</span>
+                </div>
+            </div>
+
+            <!-- Presety kolorów -->
+            <h3 class="subsection-title">SZYBKIE PRESETY KOLORÓW</h3>
+            <div class="color-presets-grid">
+                <button class="preset-btn" data-color="#FF0000" style="background-color: #FF0000;">Czerwony</button>
+                <button class="preset-btn" data-color="#00FF00" style="background-color: #00FF00;">Zielony</button>
+                <button class="preset-btn" data-color="#0000FF" style="background-color: #0000FF;">Niebieski</button>
+                <button class="preset-btn" data-color="#FFFFFF" style="background-color: #FFFFFF; color: #000;">Biały</button>
+                <button class="preset-btn" data-color="#000000" style="background-color: #2b3040;">Wyłącz</button>
+                <button class="preset-btn" data-color="#FFFF00" style="background-color: #FFFF00; color: #000;">Żółty</button>
+                <button class="preset-btn" data-color="#FF7F00" style="background-color: #FF7F00;">Pomarańczowy</button>
+                <button class="preset-btn" data-color="#00FFFF" style="background-color: #00FFFF; color: #000;">Cyan</button>
+                <button class="preset-btn" data-color="#800080" style="background-color: #800080;">Purpurowy</button>
+                <button class="preset-btn" data-color="#8A2BE2" style="background-color: #8A2BE2;">Fioletowy</button>
+            </div>
+        </section>
+
+        <!-- Sekcja 2: Jasność -->
+        <section class="section-box">
+            <div class="slider-header">
+                <span>JASNOŚĆ:</span>
+                <span id="brightness-val">80%</span>
+            </div>
+            <input type="range" id="brightness-slider" min="0" max="100" value="80">
+        </section>
+
+        <!-- Sekcja 3: Efekty i Szybkość (FastLED Engine) -->
+        <section class="section-box">
+            <h2 class="section-title">EFEKTY I SZYBKOŚĆ</h2>
+            <div class="effects-row">
+                <label for="effect-select">Efekt:</label>
+                <select id="effect-select" class="effect-dropdown">
+                    <option value="0">Static — Stały kolor</option>
+                    <option value="1">🔄 DEMO MODE — Automatyczna prezentacja</option>
+                    <option value="2">🌈 Rainbow — Tęcza</option>
+                    <option value="3">✨ Rainbow with Glitter — Tęcza z brokatem</option>
+                    <option value="4">🎊 Confetti — Konfetti</option>
+                    <option value="5">🚨 Sinelon / Cylon — Odbijający się punkt</option>
+                    <option value="6">💓 BPM — Pulsujący rytm</option>
+                    <option value="7">🤹 Juggle — Żonglerka</option>
+                    <option value="8">🔥 Fire2012 — Efekt ognia</option>
+                    <option value="9">🫁 Breathing / Pulse — Oddychanie</option>
+                    <option value="10">🎭 Theater Chase — Biegające światła</option>
+                    <option value="11">🌟 Sparkle / Twinkle — Iskry / Gwiazdy</option>
+                    <option value="12">🌊 Color Palette Cycle — Palety barwne</option>
+                    <option value="13">⚡ Strobe — Stroboskop</option>
+                </select>
+            </div>
+
+            <div class="slider-row">
+                <div class="slider-header">
+                    <span>Szybkość animacji:</span>
+                    <span id="speed-val">50ms</span>
+                </div>
+                <input type="range" id="speed-slider" min="10" max="500" value="50">
+            </div>
+
+            <!-- Parametry dla DEMO MODE -->
+            <div id="demo-controls" class="demo-box hidden">
+                <div class="slider-header">
+                    <span>Czas zmiany efektu w DEMO:</span>
+                    <span id="demo-time-val">10s</span>
+                </div>
+                <input type="range" id="demo-time-slider" min="3" max="60" value="10">
+            </div>
+        </section>
+
+        <!-- Sekcja 4: Podgląd Stanu Diod -->
+        <section class="section-box">
+            <h2 class="section-title">PODGLĄD STANU DIOD</h2>
+            <div id="led-preview-container" class="led-preview-grid">
+                <!-- Diodki będą generowane dynamicznie przez JavaScript -->
+            </div>
+        </section>
+
+        <!-- Stopka -->
+        <footer class="card-footer">
+            <span id="connection-status">Rozłączono • Wybierz "Połącz z Arduino (USB)"</span>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
