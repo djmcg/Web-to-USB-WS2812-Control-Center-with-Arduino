@@ -290,3 +290,12 @@ input[type=range] {
     font-size: 0.75rem;
     color: var(--text-secondary);
 }
+
+/* Wokwi Section */
+.wokwi-section {
+    margin-top: 20px;
+}
+
+.wokwi-section .section-title {
+    margin-bottom: 12px;
+}

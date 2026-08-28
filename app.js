@@ -3,7 +3,7 @@
 let port = null;
 let writer = null;
 let isConnected = false;
-let isPowerOn = true;
+let isPowerOn = false;
 
 let currentMode = 0;
 let brightness = 80;
@@ -249,9 +249,7 @@ async function connectSerial() {
         port = await navigator.serial.requestPort();
         await port.open({ baudRate: 9600 });
         
-        const textEncoder = new TransformStream();
-        textEncoder.readable.pipeTo(port.writable);
-        writer = textEncoder.writable.getWriter();
+        writer = port.writable.getWriter();
         
         isConnected = true;
         connectBtn.textContent = '✅ Połączono';
