@@ -299,3 +299,21 @@ input[type=range] {
 .wokwi-section .section-title {
     margin-bottom: 12px;
 }
+
+.wokwi-placeholder {
+    background-color: var(--bg-input);
+    border: 1px dashed var(--accent-blue);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+.wokwi-placeholder code {
+    background-color: var(--bg-section);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: monospace;
+    color: var(--accent-blue);
+}

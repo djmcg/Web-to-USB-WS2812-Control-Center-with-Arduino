@@ -14,6 +14,12 @@ let demoDuration = 10;
 let numLeds = 8;
 let selectedPin = 3;
 
+// Animacja podglądu diod
+let previewAnimId = null;
+let previewGHue = 0;
+let previewFrame = 0;
+let lastPreviewUpdate = 0;
+
 // Elementy DOM
 const connectBtn = document.getElementById('connect-btn');
 const masterPowerBtn = document.getElementById('master-power-btn');
@@ -47,6 +53,7 @@ window.addEventListener('DOMContentLoaded', () => {
     drawColorWheel();
     renderLEDPreview();
     setupEventListeners();
+    startPreviewAnimation();
 });
 
 // Rysowanie gradientowego koła kolorów
@@ -220,7 +227,94 @@ function renderLEDPreview() {
         item.appendChild(label);
         ledPreviewContainer.appendChild(item);
     }
-    updateLEDPreviewColors();
+}
+
+// Pętla animacji podglądu diod
+function startPreviewAnimation() {
+    if (previewAnimId) cancelAnimationFrame(previewAnimId);
+    
+    function animate(timestamp) {
+        if (timestamp - lastPreviewUpdate >= animSpeed) {
+            lastPreviewUpdate = timestamp;
+            previewFrame++;
+            previewGHue = (previewGHue + 1) % 256;
+            renderPreviewEffect();
+        }
+        previewAnimId = requestAnimationFrame(animate);
+    }
+    
+    previewAnimId = requestAnimationFrame(animate);
+}
+
+// Renderowanie efektu w podglądzie
+function renderPreviewEffect() {
+    if (!isPowerOn) {
+        updateLEDPreviewColors();
+        return;
+    }
+    
+    const effBrightness = brightness / 100;
+    
+    switch (currentMode) {
+        case 0: // Static
+            updateLEDPreviewColors();
+            break;
+            
+        case 1: // Demo - przełączanie efektów
+            renderDemoPreview(effBrightness);
+            break;
+            
+        case 2: // Rainbow
+            renderRainbowPreview(effBrightness);
+            break;
+            
+        case 3: // Rainbow with Glitter
+            renderRainbowGlitterPreview(effBrightness);
+            break;
+            
+        case 4: // Confetti
+            renderConfettiPreview(effBrightness);
+            break;
+            
+        case 5: // Sinelon
+            renderSinelonPreview(effBrightness);
+            break;
+            
+        case 6: // BPM
+            renderBPMPreview(effBrightness);
+            break;
+            
+        case 7: // Juggle
+            renderJugglePreview(effBrightness);
+            break;
+            
+        case 8: // Fire2012
+            renderFirePreview(effBrightness);
+            break;
+            
+        case 9: // Breathing
+            renderBreathingPreview(effBrightness);
+            break;
+            
+        case 10: // Theater Chase
+            renderTheaterChasePreview(effBrightness);
+            break;
+            
+        case 11: // Sparkle
+            renderSparklePreview(effBrightness);
+            break;
+            
+        case 12: // Color Palette Cycle
+            renderPaletteCyclePreview(effBrightness);
+            break;
+            
+        case 13: // Strobe
+            renderStrobePreview(effBrightness);
+            break;
+            
+        default:
+            updateLEDPreviewColors();
+    }
 }
 
 function updateLEDPreviewColors() {
@@ -236,6 +330,162 @@ function updateLEDPreviewColors() {
             circle.style.boxShadow = effBrightness > 0 ? `0 0 12px rgb(${r}, ${g}, ${b})` : 'none';
         }
     }
+}
+
+// Implementacje efektów dla podglądu
+function renderRainbowPreview(brightness) {
+    for (let i = 0; i < numLeds; i++) {
+        const hue = (previewGHue + i * 7) % 256;
+        const rgb = hslToRgb(hue / 256, 1, 0.5);
+        setLedColor(i + 1, rgb.r, rgb.g, rgb.b, brightness);
+    }
+}
+
+function renderRainbowGlitterPreview(brightness) {
+    renderRainbowPreview(brightness);
+    if (Math.random() < 0.1) {
+        const idx = Math.floor(Math.random() * numLeds) + 1;
+        setLedColor(idx, 255, 255, 255, brightness);
+    }
+}
+
+function renderConfettiPreview(brightness) {
+    for (let i = 1; i <= numLeds; i++) {
+        const hue = (previewGHue + i * 13) % 256;
+        const rgb = hslToRgb(hue / 256, 0.8, 0.6);
+        setLedColor(i, rgb.r, rgb.g, rgb.b, brightness * 0.8);
+    }
+}
+
+function renderSinelonPreview(brightness) {
+    const pos = Math.floor((Math.sin(previewFrame * 0.1) + 1) / 2 * (numLeds - 1));
+    for (let i = 1; i <= numLeds; i++) {
+        const dist = Math.abs(i - 1 - pos);
+        const intensity = Math.max(0, 1 - dist / 3);
+        const rgb = hslToRgb(previewGHue / 256, 1, 0.5);
+        setLedColor(i, rgb.r * intensity, rgb.g * intensity, rgb.b * intensity, brightness);
+    }
+}
+
+function renderBPMPreview(brightness) {
+    const beat = (Math.sin(previewFrame * 0.2) + 1) / 2;
+    for (let i = 1; i <= numLeds; i++) {
+        const hue = (previewGHue + i * 2) % 256;
+        const rgb = hslToRgb(hue / 256, 1, beat * 0.8);
+        setLedColor(i, rgb.r, rgb.g, rgb.b, brightness);
+    }
+}
+
+function renderJugglePreview(brightness) {
+    for (let i = 1; i <= numLeds; i++) {
+        const hue = (previewGHue + i * 32) % 256;
+        const rgb = hslToRgb(hue / 256, 1, 0.5);
+        const pos = Math.floor((Math.sin(previewFrame * 0.15 + i) + 1) / 2 * (numLeds - 1));
+        const dist = Math.abs(i - 1 - pos);
+        const intensity = Math.max(0, 1 - dist / 2);
+        setLedColor(i, rgb.r * intensity, rgb.g * intensity, rgb.b * intensity, brightness);
+    }
+}
+
+function renderFirePreview(brightness) {
+    for (let i = 1; i <= numLeds; i++) {
+        const heat = Math.random();
+        const rgb = hslToRgb(0.05 + heat * 0.08, 1, heat * 0.6);
+        setLedColor(i, rgb.r, rgb.g, rgb.b, brightness);
+    }
+}
+
+function renderBreathingPreview(brightness) {
+    const breath = (Math.sin(previewFrame * 0.05) + 1) / 2;
+    const r = Math.round(colorRGB.r * breath);
+    const g = Math.round(colorRGB.g * breath);
+    const b = Math.round(colorRGB.b * breath);
+    for (let i = 1; i <= numLeds; i++) {
+        setLedColor(i, r, g, b, brightness);
+    }
+}
+
+function renderTheaterChasePreview(brightness) {
+    const step = previewFrame % 3;
+    for (let i = 1; i <= numLeds; i++) {
+        if ((i - 1 + step) % 3 === 0) {
+            setLedColor(i, colorRGB.r, colorRGB.g, colorRGB.b, brightness);
+        } else {
+            setLedColor(i, 0, 0, 0, 0);
+        }
+    }
+}
+
+function renderSparklePreview(brightness) {
+    for (let i = 1; i <= numLeds; i++) {
+        setLedColor(i, colorRGB.r * 0.2, colorRGB.g * 0.2, colorRGB.b * 0.2, brightness * 0.3);
+    }
+    if (Math.random() < 0.3) {
+        const idx = Math.floor(Math.random() * numLeds) + 1;
+        setLedColor(idx, colorRGB.r, colorRGB.g, colorRGB.b, brightness);
+    }
+}
+
+function renderPaletteCyclePreview(brightness) {
+    for (let i = 1; i <= numLeds; i++) {
+        const hue = (previewGHue + i * 8) % 256;
+        const rgb = hslToRgb(hue / 256, 0.8, 0.5);
+        setLedColor(i, rgb.r, rgb.g, rgb.b, brightness);
+    }
+}
+
+function renderStrobePreview(brightness) {
+    const isOn = previewFrame % 4 < 2;
+    for (let i = 1; i <= numLeds; i++) {
+        if (isOn) {
+            setLedColor(i, colorRGB.r, colorRGB.g, colorRGB.b, brightness);
+        } else {
+            setLedColor(i, 0, 0, 0, 0);
+        }
+    }
+}
+
+function renderDemoPreview(brightness) {
+    // Demo przełącza co kilka sekund - uproszczone: co 180 klatek (~3s przy 60fps)
+    const demoStep = Math.floor(previewFrame / 180) % 12 + 2;
+    const savedMode = currentMode;
+    currentMode = demoStep;
+    renderPreviewEffect();
+    currentMode = savedMode;
+}
+
+function setLedColor(index, r, g, b, brightness) {
+    const circle = document.getElementById(`led-circle-${index}`);
+    if (circle) {
+        const ri = Math.round(r * brightness);
+        const gi = Math.round(g * brightness);
+        const bi = Math.round(b * brightness);
+        circle.style.backgroundColor = `rgb(${ri}, ${gi}, ${bi})`;
+        circle.style.boxShadow = brightness > 0 ? `0 0 12px rgb(${ri}, ${gi}, ${bi})` : 'none';
+    }
+}
+
+// Konwersja HSL do RGB
+function hslToRgb(h, s, l) {
+    let r, g, b;
+    if (s === 0) {
+        r = g = b = l;
+    } else {
+        const hue2rgb = (p, q, t) => {
+            if (t < 0) t += 1;
+            if (t > 1) t -= 1;
+            if (t < 1/6) return p + (q - p) * 6 * t;
+            if (t < 1/2) return q;
+            if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+            return p;
+        };
+        const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        const p = 2 * l - q;
+        r = hue2rgb(p, q, h + 1/3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1/3);
+    }
+    return { r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(b * 255) };
 }
 
 // Nawiązywanie połączenia Web Serial API
@@ -265,8 +515,6 @@ async function connectSerial() {
 
 // Wysyłanie ramki bajtów przez USB do Arduino
 async function sendDataToArduino() {
-    updateLEDPreviewColors();
-
     if (!isConnected || !writer) return;
 
     const effBrightness = isPowerOn ? Math.round((brightness / 100) * 255) : 0;
