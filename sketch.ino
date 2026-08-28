@@ -40,14 +40,15 @@ void loop() {
     lastAnimUpdate = millis();
     gHue++; // płynna zmiana odcienia w tle
     runEffectLogic();
+    clearUnusedLeds();
     FastLED.show();
   }
 }
 
 // Odbieranie pakietów po port szeregowym USB
-// Format ramki: [HEADER 0xAA] [MODE] [BRIGHTNESS] [R] [G] [B] [SPEED_MS_HIGH] [SPEED_MS_LOW] [DEMO_TIME_S] [NUM_LEDS]
+// Format ramki: [HEADER 0xAA] [MODE] [BRIGHTNESS] [R] [G] [B] [SPEED_MS_HIGH] [SPEED_MS_LOW] [DEMO_TIME_S] [NUM_LEDS] [PIN]
 void readSerialData() {
-  while (Serial.available() >= 10) {
+  while (Serial.available() >= 11) {
     if (Serial.read() == 0xAA) { // Nagłówek ramki
       currentMode   = Serial.read();
       globalBrightness = Serial.read();
@@ -61,13 +62,39 @@ void readSerialData() {
       
       demoDuration  = Serial.read();
       uint8_t newLeds = Serial.read();
+      uint8_t newPin = Serial.read();
 
       if (newLeds > 0 && newLeds <= MAX_LEDS) {
         numLeds = newLeds;
       }
 
+      if (newPin >= 2 && newPin <= 8 && newPin != currentPin) {
+        changePin(newPin);
+      }
+
       FastLED.setBrightness(globalBrightness);
     }
+  }
+}
+
+void changePin(uint8_t newPin) {
+  currentPin = newPin;
+  switch (currentPin) {
+    case 2: FastLED.addLeds<WS2812B, 2, GRB>(leds, MAX_LEDS); break;
+    case 3: FastLED.addLeds<WS2812B, 3, GRB>(leds, MAX_LEDS); break;
+    case 4: FastLED.addLeds<WS2812B, 4, GRB>(leds, MAX_LEDS); break;
+    case 5: FastLED.addLeds<WS2812B, 5, GRB>(leds, MAX_LEDS); break;
+    case 6: FastLED.addLeds<WS2812B, 6, GRB>(leds, MAX_LEDS); break;
+    case 7: FastLED.addLeds<WS2812B, 7, GRB>(leds, MAX_LEDS); break;
+    case 8: FastLED.addLeds<WS2812B, 8, GRB>(leds, MAX_LEDS); break;
+  }
+  FastLED.setBrightness(globalBrightness);
+  FastLED.clear(true);
+}
+
+void clearUnusedLeds() {
+  for (uint16_t i = numLeds; i < MAX_LEDS; i++) {
+    leds[i] = CRGB::Black;
   }
 }
 

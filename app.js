@@ -81,7 +81,7 @@ function drawColorWheel() {
 
 // Obsługa zdarzeń UI
 function setupEventListeners() {
-    connectBtn.addEventListener('click', connectSerial);
+    connectBtn.addEventListener('click', toggleConnection);
     masterPowerBtn.addEventListener('click', togglePower);
     masterPowerBtnLg.addEventListener('click', togglePower);
 
@@ -498,6 +498,14 @@ function hslToRgb(h, s, l) {
     return { r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(b * 255) };
 }
 
+async function toggleConnection() {
+    if (isConnected) {
+        await disconnectSerial();
+    } else {
+        await connectSerial();
+    }
+}
+
 // Nawiązywanie połączenia Web Serial API
 async function connectSerial() {
     if (!('serial' in navigator)) {
@@ -512,14 +520,41 @@ async function connectSerial() {
         writer = port.writable.getWriter();
         
         isConnected = true;
-        connectBtn.textContent = '✅ Połączono';
-        connectBtn.style.backgroundColor = '#10b981';
-        connectionStatus.textContent = 'Połączono z Arduino USB • 9600 baud • Transmisja aktywna';
+        updateConnectionUI();
         
         sendDataToArduino();
     } catch (err) {
         console.error('Błąd połączenia USB:', err);
         connectionStatus.textContent = 'Błąd połączenia z portem USB';
+    }
+}
+
+async function disconnectSerial() {
+    try {
+        if (writer) {
+            writer.releaseLock();
+            writer = null;
+        }
+        if (port) {
+            await port.close();
+            port = null;
+        }
+        isConnected = false;
+        updateConnectionUI();
+    } catch (err) {
+        console.error('Błąd rozłączania:', err);
+    }
+}
+
+function updateConnectionUI() {
+    if (isConnected) {
+        connectBtn.textContent = 'Rozłącz';
+        connectBtn.style.backgroundColor = '#ef4444';
+        connectionStatus.textContent = 'Połączono z Arduino USB • 9600 baud • Transmisja aktywna';
+    } else {
+        connectBtn.textContent = '🔌 Połącz z Arduino (USB)';
+        connectBtn.style.backgroundColor = '';
+        connectionStatus.textContent = 'Rozłączono • Kliknij "Połącz z Arduino (USB)"';
     }
 }
 
@@ -541,7 +576,8 @@ async function sendDataToArduino() {
         speedH,         // Speed High Byte
         speedL,         // Speed Low Byte
         demoDuration,   // Demo Switch Interval
-        numLeds         // Number of LEDs
+        numLeds,        // Number of LEDs
+        selectedPin     // GPIO Pin
     ]);
 
     try {
