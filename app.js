@@ -23,6 +23,7 @@ let lastPreviewUpdate = 0;
 // Elementy DOM
 const connectBtn = document.getElementById('connect-btn');
 const masterPowerBtn = document.getElementById('master-power-btn');
+const masterPowerBtnLg = document.getElementById('master-power-btn-2');
 const pinSelect = document.getElementById('pin-select');
 const ledCountInput = document.getElementById('led-count');
 const headerTitle = document.getElementById('header-title');
@@ -82,6 +83,7 @@ function drawColorWheel() {
 function setupEventListeners() {
     connectBtn.addEventListener('click', connectSerial);
     masterPowerBtn.addEventListener('click', togglePower);
+    masterPowerBtnLg.addEventListener('click', togglePower);
 
     ledCountInput.addEventListener('input', (e) => {
         numLeds = Math.min(256, Math.max(1, parseInt(e.target.value) || 8));
@@ -185,9 +187,13 @@ function togglePower() {
     if (isPowerOn) {
         masterPowerBtn.textContent = 'ON';
         masterPowerBtn.className = 'power-btn on';
+        masterPowerBtnLg.textContent = '⏻ WŁĄCZONY';
+        masterPowerBtnLg.className = 'power-btn-lg on';
     } else {
         masterPowerBtn.textContent = 'OFF';
         masterPowerBtn.className = 'power-btn off';
+        masterPowerBtnLg.textContent = '⏻ WYŁĄCZONY';
+        masterPowerBtnLg.className = 'power-btn-lg off';
     }
     sendDataToArduino();
 }

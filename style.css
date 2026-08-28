@@ -91,6 +91,37 @@ body {
     color: #fff;
 }
 
+/* Duży włącznik zasilania */
+.power-controls {
+    display: flex;
+    justify-content: center;
+    margin-top: 8px;
+}
+
+.power-btn-lg {
+    border: none;
+    padding: 14px 32px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.power-btn-lg.on {
+    background-color: #10b981;
+    color: #fff;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+}
+
+.power-btn-lg.off {
+    background-color: #ef4444;
+    color: #fff;
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+}
+
 /* Główny układ side-by-side */
 .main-layout {
     display: flex;
