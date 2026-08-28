@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "author": "OpenSource",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-arduino-uno", "id": "uno", "top": 100, "left": 0, "attrs": {} },
+    {
+      "type": "wokwi-neopixel-canvas",
+      "id": "strip",
+      "top": -20,
+      "left": 100,
+      "attrs": { "pixels": "8" }
+    }
+  ],
+  "connections": [
+    [ "uno:GND.1", "strip:GND", "black", [ "v0" ] ],
+    [ "uno:5V", "strip:VCC", "red", [ "v0" ] ],
+    [ "uno:3", "strip:DIN", "green", [ "v0" ] ]
+  ],
+  "dependencies": {}
+}
