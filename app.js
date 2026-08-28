@@ -12,7 +12,6 @@ let colorHEX = "#FF0000";
 let animSpeed = 50;
 let demoDuration = 10;
 let numLeds = 8;
-let selectedPin = 3;
 
 // Animacja podglądu diod
 let previewAnimId = null;
@@ -24,7 +23,6 @@ let lastPreviewUpdate = 0;
 const connectBtn = document.getElementById('connect-btn');
 const masterPowerBtn = document.getElementById('master-power-btn');
 const masterPowerBtnLg = document.getElementById('master-power-btn-2');
-const pinSelect = document.getElementById('pin-select');
 const ledCountInput = document.getElementById('led-count');
 const headerTitle = document.getElementById('header-title');
 const connectionStatus = document.getElementById('connection-status');
@@ -89,11 +87,6 @@ function setupEventListeners() {
         numLeds = Math.min(256, Math.max(1, parseInt(e.target.value) || 8));
         headerTitle.textContent = `Panel Taśmy LED (${numLeds}x WS2812)`;
         renderLEDPreview();
-        sendDataToArduino();
-    });
-
-    pinSelect.addEventListener('change', (e) => {
-        selectedPin = parseInt(e.target.value);
         sendDataToArduino();
     });
 
